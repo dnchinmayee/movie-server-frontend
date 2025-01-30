@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { apiRoutes } from './constants';
+import MovieSearch from './MovieSearch';
 
 const Movies = () => {
     const [movies, setMovies] = useState([]);
-    const [searchTitle, setSearchTitle] = useState("");
     const [editingMovie, setEditingMovie] = useState(null);
     const [editedMovie, setEditedMovie] = useState({
         title: "",
@@ -15,35 +15,17 @@ const Movies = () => {
 
     // Initially fetch all movies
     useEffect(() => {
-        const fetchMovies = async () => {
-            try {
-                const response = await fetch(apiRoutes.movies);
-                const data = await response.json();
-                console.log(data);
-                setMovies(data);
-            } catch (error) {
-                console.error('Error fetching movies:', error);
-            }
-        };
         fetchMovies();
     }, []);
 
-    const handleSearch = () => {
-        if (!searchTitle.trim()) {
-            // If search is empty, show all movies
-            setMovies(allMovies);
-        } else {
-            // Filter movies based on title
-            const filteredMovies = allMovies.filter(movie =>
-                movie.title.toLowerCase().includes(searchTitle.toLowerCase())
-            );
-            setMovies(filteredMovies);
-        }
-    };
-
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            handleSearch();
+    const fetchMovies = async () => {
+        try {
+            const response = await fetch(apiRoutes.movies);
+            const data = await response.json();
+            console.log(data);
+            setMovies(data);
+        } catch (error) {
+            console.error('Error fetching movies:', error);
         }
     };
 
@@ -98,30 +80,14 @@ const Movies = () => {
         }));
     };
 
+    const handleSearchResults = (searchResults) => {
+        setMovies(searchResults);
+    };
+
     return (
         <div className="container mt-4">
             <h2>Movies List</h2>
-            <div className="row mb-3">
-                <div className="col-md-6">
-                    <div className="input-group">
-                        <input 
-                            type="text" 
-                            className="form-control" 
-                            placeholder="Enter movie title to search" 
-                            value={searchTitle}
-                            onChange={(e) => setSearchTitle(e.target.value)}
-                            onKeyPress={handleKeyPress}
-                        />
-                        <button 
-                            className="btn btn-primary" 
-                            onClick={handleSearch}
-                        >
-                            Search Movies
-                        </button>
-                    </div>
-                </div>
-            </div>
-
+            <MovieSearch onSearch={handleSearchResults} />
             {movies.length > 0 ? (
                 <table className="table table-striped table-bordered">
                     <thead className="table-dark">
