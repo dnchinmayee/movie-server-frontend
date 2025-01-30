@@ -1,0 +1,51 @@
+.movies-table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.movies-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.movies-table th, .movies-table td {
+    padding: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Column widths */
+.movies-table .col-id {
+    width: 5%;
+}
+
+.movies-table .col-title {
+    width: 25%;
+}
+
+.movies-table .col-genre {
+    width: 15%;
+}
+
+.movies-table .col-director {
+    width: 20%;
+}
+
+.movies-table .col-year {
+    width: 10%;
+}
+
+.movies-table .col-rating {
+    width: 10%;
+}
+
+.movies-table .col-actions {
+    width: 15%;
+}
+
+/* Style for edit inputs to prevent them from breaking layout */
+.movies-table input.form-control {
+    width: 100%;
+    min-width: 0;
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { apiRoutes } from './constants';
 import MovieSearch from './MovieSearch';
+import './Movies.css';
 
 const Movies = () => {
     const [movies, setMovies] = useState([]);
@@ -89,114 +90,116 @@ const Movies = () => {
             <h2>Movies List</h2>
             <MovieSearch onSearch={handleSearchResults} />
             {movies.length > 0 ? (
-                <table className="table table-striped table-bordered">
-                    <thead className="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Genre</th>
-                            <th>Director</th>
-                            <th>Year</th>
-                            <th>Rating</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {movies.map(movie => (
-                            <tr key={movie.id}>
-                                <td>{movie.id}</td>
-                                <td>
-                                    {editingMovie === movie.id ? (
-                                        <input 
-                                            type="text"
-                                            value={editedMovie.title}
-                                            onChange={(e) => handleInputChange('title', e.target.value)}
-                                            className="form-control"
-                                        />
-                                    ) : (
-                                        movie.title
-                                    )}
-                                </td>
-                                <td>
-                                    {editingMovie === movie.id ? (
-                                        <input 
-                                            type="text"
-                                            value={editedMovie.genre}
-                                            onChange={(e) => handleInputChange('genre', e.target.value)}
-                                            className="form-control"
-                                        />
-                                    ) : (
-                                        movie.genre
-                                    )}
-                                </td>
-                                <td>
-                                    {editingMovie === movie.id ? (
-                                        <input 
-                                            type="text"
-                                            value={editedMovie.director}
-                                            onChange={(e) => handleInputChange('director', e.target.value)}
-                                            className="form-control"
-                                        />
-                                    ) : (
-                                        movie.director
-                                    )}
-                                </td>
-                                <td>
-                                    {editingMovie === movie.id ? (
-                                        <input 
-                                            type="number"
-                                            value={editedMovie.year}
-                                            onChange={(e) => handleInputChange('year', e.target.value)}
-                                            className="form-control"
-                                        />
-                                    ) : (
-                                        movie.year
-                                    )}
-                                </td>
-                                <td>
-                                    {editingMovie === movie.id ? (
-                                        <input 
-                                            type="number"
-                                            step="0.1"
-                                            min="0"
-                                            max="10"
-                                            value={editedMovie.rating}
-                                            onChange={(e) => handleInputChange('rating', e.target.value)}
-                                            className="form-control"
-                                        />
-                                    ) : (
-                                        movie.rating
-                                    )}
-                                </td>
-                                <td>
-                                    {editingMovie === movie.id ? (
-                                        <div className="btn-group">
-                                            <button
-                                                className="btn btn-success btn-sm"
-                                                onClick={handleUpdate}
-                                            >
-                                                Save
-                                            </button>
-                                            <button
-                                                className="btn btn-secondary btn-sm"
-                                                onClick={() => setEditingMovie(null)}
-                                            >
-                                                Cancel
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <button 
-                                            className="btn btn-warning btn-sm" 
-                                            onClick={() => handleEdit(movie)}
-                                        >
-                                            Edit
-                                        </button>
-                                    )}
-                                </td>
+                <div className="movies-table-container">
+                    <table className="table table-striped table-bordered movies-table">
+                        <thead className="table-dark">
+                            <tr>
+                                <th className="col-id">ID</th>
+                                <th className="col-title">Title</th>
+                                <th className="col-genre">Genre</th>
+                                <th className="col-director">Director</th>
+                                <th className="col-year">Year</th>
+                                <th className="col-rating">Rating</th>
+                                <th className="col-actions">Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {movies.map(movie => (
+                                <tr key={movie.id}>
+                                    <td className="col-id">{movie.id}</td>
+                                    <td className="col-title">
+                                        {editingMovie === movie.id ? (
+                                            <input 
+                                                type="text"
+                                                value={editedMovie.title}
+                                                onChange={(e) => handleInputChange('title', e.target.value)}
+                                                className="form-control"
+                                            />
+                                        ) : (
+                                            movie.title
+                                        )}
+                                    </td>
+                                    <td className="col-genre">
+                                        {editingMovie === movie.id ? (
+                                            <input 
+                                                type="text"
+                                                value={editedMovie.genre}
+                                                onChange={(e) => handleInputChange('genre', e.target.value)}
+                                                className="form-control"
+                                            />
+                                        ) : (
+                                            movie.genre
+                                        )}
+                                    </td>
+                                    <td className="col-director">
+                                        {editingMovie === movie.id ? (
+                                            <input 
+                                                type="text"
+                                                value={editedMovie.director}
+                                                onChange={(e) => handleInputChange('director', e.target.value)}
+                                                className="form-control"
+                                            />
+                                        ) : (
+                                            movie.director
+                                        )}
+                                    </td>
+                                    <td className="col-year">
+                                        {editingMovie === movie.id ? (
+                                            <input 
+                                                type="number"
+                                                value={editedMovie.year}
+                                                onChange={(e) => handleInputChange('year', e.target.value)}
+                                                className="form-control"
+                                            />
+                                        ) : (
+                                            movie.year
+                                        )}
+                                    </td>
+                                    <td className="col-rating">
+                                        {editingMovie === movie.id ? (
+                                            <input 
+                                                type="number"
+                                                step="0.1"
+                                                min="0"
+                                                max="10"
+                                                value={editedMovie.rating}
+                                                onChange={(e) => handleInputChange('rating', e.target.value)}
+                                                className="form-control"
+                                            />
+                                        ) : (
+                                            movie.rating
+                                        )}
+                                    </td>
+                                    <td className="col-actions">
+                                        {editingMovie === movie.id ? (
+                                            <div className="btn-group">
+                                                <button
+                                                    className="btn btn-success btn-sm"
+                                                    onClick={handleUpdate}
+                                                >
+                                                    Save
+                                                </button>
+                                                <button
+                                                    className="btn btn-secondary btn-sm"
+                                                    onClick={() => setEditingMovie(null)}
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button 
+                                                className="btn btn-warning btn-sm" 
+                                                onClick={() => handleEdit(movie)}
+                                            >
+                                                Edit
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             ) : (
                 <div className="alert alert-info">
                     No movies found with the given title. Try a different search term.
