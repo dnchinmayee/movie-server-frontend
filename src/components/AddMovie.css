@@ -1,0 +1,70 @@
+.add-movie-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.add-movie-container .card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.add-movie-container .form-label {
+    font-weight: 500;
+}
+
+.add-movie-container input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.add-movie-container input[type="number"]::-webkit-outer-spin-button,
+.add-movie-container input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+}
+
+.add-movie-modal {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    z-index: 1051;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.add-movie-modal .form-label {
+    font-weight: 500;
+}
+
+.add-movie-modal input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.add-movie-modal input[type="number"]::-webkit-outer-spin-button,
+.add-movie-modal input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

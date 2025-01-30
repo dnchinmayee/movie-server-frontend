@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { apiRoutes } from './constants';
 import MovieSearch from './MovieSearch';
+import AddMovie from './AddMovie';
 import './Movies.css';
 
 const Movies = () => {
@@ -72,6 +73,29 @@ const Movies = () => {
         }
     };
 
+    const handleDelete = async (movieId) => {
+        if (!window.confirm('Are you sure you want to delete this movie?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${apiRoutes.movies}/${movieId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.ok) {
+                setMovies(prevMovies => prevMovies.filter(movie => movie.id !== movieId));
+            } else {
+                console.error('Failed to delete movie');
+            }
+        } catch (error) {
+            console.error('Error deleting movie:', error);
+        }
+    };
+
     const handleInputChange = (field, value) => {
         setEditedMovie(prev => ({
             ...prev,
@@ -85,9 +109,14 @@ const Movies = () => {
         setMovies(searchResults);
     };
 
+    const handleMovieAdded = (newMovie) => {
+        setMovies(prevMovies => [...prevMovies, newMovie]);
+    };
+
     return (
         <div className="container mt-4">
             <h2>Movies List</h2>
+            <AddMovie onMovieAdded={handleMovieAdded} />
             <MovieSearch onSearch={handleSearchResults} />
             {movies.length > 0 ? (
                 <div className="movies-table-container">
@@ -187,12 +216,20 @@ const Movies = () => {
                                                 </button>
                                             </div>
                                         ) : (
-                                            <button 
-                                                className="btn btn-warning btn-sm" 
-                                                onClick={() => handleEdit(movie)}
-                                            >
-                                                Edit
-                                            </button>
+                                            <div className="btn-group">
+                                                <button 
+                                                    className="btn btn-warning btn-sm" 
+                                                    onClick={() => handleEdit(movie)}
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button 
+                                                    className="btn btn-danger btn-sm" 
+                                                    onClick={() => handleDelete(movie.id)}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
                                         )}
                                     </td>
                                 </tr>

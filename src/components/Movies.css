@@ -21,7 +21,7 @@
 }
 
 .movies-table .col-title {
-    width: 25%;
+    width: 20%;
 }
 
 .movies-table .col-genre {
@@ -41,11 +41,24 @@
 }
 
 .movies-table .col-actions {
-    width: 15%;
+    width: 20%;
+    min-width: 160px;
 }
 
 /* Style for edit inputs to prevent them from breaking layout */
 .movies-table input.form-control {
     width: 100%;
     min-width: 0;
+}
+
+/* Style for action buttons */
+.movies-table .btn-group {
+    white-space: nowrap;
+    display: flex;
+    gap: 4px;
+}
+
+.movies-table .btn-group .btn {
+    padding: 4px 8px;
+    font-size: 0.875rem;
 }
