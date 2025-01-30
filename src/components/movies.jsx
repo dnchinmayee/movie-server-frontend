@@ -1,37 +1,17 @@
 import { useEffect, useState } from 'react';
 import { apiRoutes } from './constants';
 
-const MoviesData = [
-    {
-        id: 1,
-        title: "Inception",
-        genre: "Sci-Fi",
-        director: "Christopher Nolan",
-        year: 2010,
-        rating: 8.8
-    },
-    {
-        id: 2,
-        title: "The Godfather",
-        genre: "Crime",
-        director: "Francis Ford Coppola",
-        year: 1972,
-        rating: 9.2
-    },
-    {
-        id: 3,
-        title: "Pulp Fiction",
-        genre: "Crime",
-        director: "Quentin Tarantino",
-        year: 1994,
-        rating: 8.9
-    }
-];
-
 const Movies = () => {
-    const [movies, setMovies] = useState(MoviesData);
+    const [movies, setMovies] = useState([]);
     const [searchTitle, setSearchTitle] = useState("");
-    const [allMovies, setAllMovies] = useState([]);
+    const [editingMovie, setEditingMovie] = useState(null);
+    const [editedMovie, setEditedMovie] = useState({
+        title: "",
+        genre: "",
+        director: "",
+        year: 1970,
+        rating: 0
+    });
 
     // Initially fetch all movies
     useEffect(() => {
@@ -39,12 +19,10 @@ const Movies = () => {
             try {
                 const response = await fetch(apiRoutes.movies);
                 const data = await response.json();
-                setAllMovies(data);
+                console.log(data);
                 setMovies(data);
             } catch (error) {
                 console.error('Error fetching movies:', error);
-                setAllMovies(MoviesData);
-                setMovies(MoviesData);
             }
         };
         fetchMovies();
@@ -67,6 +45,57 @@ const Movies = () => {
         if (e.key === 'Enter') {
             handleSearch();
         }
+    };
+
+    const handleEdit = (movie) => {
+        setEditingMovie(movie.id);
+        setEditedMovie({
+            title: movie.title,
+            genre: movie.genre,
+            director: movie.director,
+            year: movie.year,
+            rating: movie.rating
+        });
+    };
+
+    const handleUpdate = async () => {
+        const movieToUpdate = {
+            ...editedMovie,
+            rating: parseFloat(editedMovie.rating) || 0,
+            year: parseInt(editedMovie.year) || 1970
+        };
+        
+        console.log(movieToUpdate);
+        try {
+            const response = await fetch(`${apiRoutes.movies}/${editingMovie}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(movieToUpdate)
+            });
+
+            if (response.ok) {
+                const updatedMovies = movies.map(movie =>
+                    movie.id === editingMovie ? { ...movie, ...movieToUpdate } : movie
+                );
+                setMovies(updatedMovies);
+                setEditingMovie(null);
+            } else {
+                console.error('Failed to update movie');
+            }
+        } catch (error) {
+            console.error('Error updating movie:', error);
+        }
+    };
+
+    const handleInputChange = (field, value) => {
+        setEditedMovie(prev => ({
+            ...prev,
+            [field]: field === 'rating' ? parseFloat(value) || 0 : 
+                     field === 'year' ? parseInt(value) || 1970 : 
+                     value
+        }));
     };
 
     return (
@@ -103,17 +132,101 @@ const Movies = () => {
                             <th>Director</th>
                             <th>Year</th>
                             <th>Rating</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {movies.map(movie => (
                             <tr key={movie.id}>
                                 <td>{movie.id}</td>
-                                <td>{movie.title}</td>
-                                <td>{movie.genre}</td>
-                                <td>{movie.director}</td>
-                                <td>{movie.year}</td>
-                                <td>{movie.rating}</td>
+                                <td>
+                                    {editingMovie === movie.id ? (
+                                        <input 
+                                            type="text"
+                                            value={editedMovie.title}
+                                            onChange={(e) => handleInputChange('title', e.target.value)}
+                                            className="form-control"
+                                        />
+                                    ) : (
+                                        movie.title
+                                    )}
+                                </td>
+                                <td>
+                                    {editingMovie === movie.id ? (
+                                        <input 
+                                            type="text"
+                                            value={editedMovie.genre}
+                                            onChange={(e) => handleInputChange('genre', e.target.value)}
+                                            className="form-control"
+                                        />
+                                    ) : (
+                                        movie.genre
+                                    )}
+                                </td>
+                                <td>
+                                    {editingMovie === movie.id ? (
+                                        <input 
+                                            type="text"
+                                            value={editedMovie.director}
+                                            onChange={(e) => handleInputChange('director', e.target.value)}
+                                            className="form-control"
+                                        />
+                                    ) : (
+                                        movie.director
+                                    )}
+                                </td>
+                                <td>
+                                    {editingMovie === movie.id ? (
+                                        <input 
+                                            type="number"
+                                            value={editedMovie.year}
+                                            onChange={(e) => handleInputChange('year', e.target.value)}
+                                            className="form-control"
+                                        />
+                                    ) : (
+                                        movie.year
+                                    )}
+                                </td>
+                                <td>
+                                    {editingMovie === movie.id ? (
+                                        <input 
+                                            type="number"
+                                            step="0.1"
+                                            min="0"
+                                            max="10"
+                                            value={editedMovie.rating}
+                                            onChange={(e) => handleInputChange('rating', e.target.value)}
+                                            className="form-control"
+                                        />
+                                    ) : (
+                                        movie.rating
+                                    )}
+                                </td>
+                                <td>
+                                    {editingMovie === movie.id ? (
+                                        <div className="btn-group">
+                                            <button
+                                                className="btn btn-success btn-sm"
+                                                onClick={handleUpdate}
+                                            >
+                                                Save
+                                            </button>
+                                            <button
+                                                className="btn btn-secondary btn-sm"
+                                                onClick={() => setEditingMovie(null)}
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button 
+                                            className="btn btn-warning btn-sm" 
+                                            onClick={() => handleEdit(movie)}
+                                        >
+                                            Edit
+                                        </button>
+                                    )}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
